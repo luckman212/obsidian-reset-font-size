@@ -4,7 +4,7 @@
 
 Ever found yourself "zoomed in" on your notes with seemingly no way to get the text back to its normal size? Pressing <kbd>cmd/ctrl+0</kbd> doesn't work, nor does quitting and re-launching Obsidian.
 
-![](img/zoomed.png)
+![](https://raw.githubusercontent.com/luckman212/obsidian-reset-font-size/main/img/zoomed.png)
 
 This can happen after accidentally (or intentionally) zooming in or out with the mouse wheel, trackpad, or keyboard shortcuts.
 
@@ -20,11 +20,11 @@ The command can be bound to a hotkey or triggered from the command palette. You 
 
 ### Sidebar
 
-![](img/sidebar.png)
+![](https://raw.githubusercontent.com/luckman212/obsidian-reset-font-size/main/img/sidebar.png)
 
 Command Palette
 
-![](img/palette.png)
+![](https://raw.githubusercontent.com/luckman212/obsidian-reset-font-size/main/img/palette.png)
 
 ### Hotkey
 
