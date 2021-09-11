@@ -8,25 +8,22 @@ declare module "obsidian" {
 
 interface ResetFontSizeSettings {
   defaultBaseFontSize: number;
+  ribbonIcon: boolean;
 }
 
 const DEFAULT_SETTINGS: ResetFontSizeSettings = {
-  defaultBaseFontSize: 16
+  defaultBaseFontSize: 16,
+  ribbonIcon: true
 }
 
 export default class ResetFontSizePlugin extends Plugin {
   settings: ResetFontSizeSettings;
+  ribbonIconEl: HTMLElement | undefined = undefined;
 
   async onload() {
     console.log('loading %s plugin', this.manifest.name);
 
     await this.loadSettings();
-
-    this.addRibbonIcon(
-      'uppercase-lowercase-a',
-      'Reset Font Size',
-      () => this.doReset()
-    );
 
     this.addCommand({
       id: 'reset-font-size',
@@ -34,6 +31,7 @@ export default class ResetFontSizePlugin extends Plugin {
       callback: () => this.doReset()
     });
 
+    this.refreshRibbonIcon();
     this.addSettingTab(new ResetFontSizeSettingsTab(this.app, this));
 
   }
@@ -49,6 +47,17 @@ export default class ResetFontSizePlugin extends Plugin {
   async saveSettings() {
     await this.saveData(this.settings);
   }
+
+  refreshRibbonIcon = () => {
+    this.ribbonIconEl?.remove();
+    if (this.settings.ribbonIcon) {
+      this.ribbonIconEl = this.addRibbonIcon(
+        'uppercase-lowercase-a',
+        'Reset Font Size',
+        () => this.doReset()
+      );
+    }
+  };
 
   doReset() {
     this.app.changeBaseFontSize(this.settings.defaultBaseFontSize);
@@ -83,12 +92,24 @@ class ResetFontSizeSettingsTab extends PluginSettingTab {
           .setDynamicTooltip()
           .setLimits(10, 30, 1)
           .setValue(this.plugin.settings.defaultBaseFontSize)
-          .onChange(async (new_value) => {
+          .onChange((new_value) => {
             this.plugin.settings.defaultBaseFontSize = new_value;
             this.updateSettingsDesc();
-            await this.plugin.saveSettings();
+            this.plugin.saveSettings();
           });
       });
+    new Setting(containerEl)
+      .setName('Show Ribbon Icon')
+      .setDesc('Toggle the display of the Ribbon Icon.')
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.ribbonIcon)
+          .onChange((value) => {
+            this.plugin.settings.ribbonIcon = value;
+            this.plugin.saveSettings();
+            this.plugin.refreshRibbonIcon();
+        })
+      );
   }
 
   private updateSettingsDesc() {
