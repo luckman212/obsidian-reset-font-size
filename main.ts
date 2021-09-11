@@ -108,7 +108,7 @@ class ResetFontSizeSettingsTab extends PluginSettingTab {
           });
       });
     new Setting(containerEl)
-      .setName('Also reset global app zoom level')
+      .setName('Reset global app zoom level')
       .setDesc('Enable to also reset global webFrame ZoomFactor (Desktop only).')
       .addToggle((toggle) =>
         toggle
