@@ -1,4 +1,4 @@
-import { App, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Notice, Platform, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 declare module "obsidian" {
   interface App {
@@ -9,11 +9,13 @@ declare module "obsidian" {
 interface ResetFontSizeSettings {
   defaultBaseFontSize: number;
   ribbonIcon: boolean;
+  resetGlobalZoomFactor: boolean;
 }
 
 const DEFAULT_SETTINGS: ResetFontSizeSettings = {
   defaultBaseFontSize: 16,
-  ribbonIcon: true
+  ribbonIcon: true,
+  resetGlobalZoomFactor: true
 }
 
 export default class ResetFontSizePlugin extends Plugin {
@@ -60,8 +62,15 @@ export default class ResetFontSizePlugin extends Plugin {
   };
 
   doReset() {
+    // console.log('resetting font size to: %d', this.settings.defaultBaseFontSize);
     this.app.changeBaseFontSize(this.settings.defaultBaseFontSize);
-    //console.log('reset font size to: %d', s);
+    if (this.settings.resetGlobalZoomFactor && Platform.isDesktop) {
+      // console.log('setting global zoomFactor to 1');
+      // require("electron").webFrame.setZoomFactor(1); // deprecated, non-persistent
+      const BrowserWindow = require('electron').remote.BrowserWindow;
+      const win = BrowserWindow.getFocusedWindow();
+      win.webContents.zoomFactor = 1.0;
+    }
   }
 
 }
@@ -98,6 +107,17 @@ class ResetFontSizeSettingsTab extends PluginSettingTab {
             this.plugin.saveSettings();
           });
       });
+    new Setting(containerEl)
+      .setName('Also reset global app zoom level')
+      .setDesc('Enable to also reset global webFrame ZoomFactor (Desktop only).')
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.resetGlobalZoomFactor)
+          .onChange((value) => {
+            this.plugin.settings.resetGlobalZoomFactor = value;
+            this.plugin.saveSettings();
+        })
+      );
     new Setting(containerEl)
       .setName('Show Ribbon Icon')
       .setDesc('Toggle the display of the Ribbon Icon.')

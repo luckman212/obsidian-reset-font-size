@@ -10,7 +10,7 @@ This can happen after accidentally (or intentionally) zooming in or out with the
 
 ## What
 
-This is a small plugin I wrote that aims to solve that problem by adding a button and a command to reset the font size back to a user-configurable default value. Yes, you can also do this manually from Settings > Appearance > Font Size, but this is faster.
+This is a small plugin I wrote that aims to solve that problem by adding a button and a command to reset the font size back to a user-configurable default value. Yes, you can also do this manually from Settings > Appearance > Font Size, but this is faster (and optionally resets both the font size and the global window zoom level in one step).
 
 ## How
 
