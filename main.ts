@@ -2,7 +2,7 @@ import { App, Notice, Platform, Plugin, PluginSettingTab, Setting } from 'obsidi
 
 declare module "obsidian" {
   interface App {
-    changeBaseFontSize: any
+    updateFontSize: any
   }
 }
 
@@ -63,7 +63,9 @@ export default class ResetFontSizePlugin extends Plugin {
 
   doReset() {
     // console.log('resetting font size to: %d', this.settings.defaultBaseFontSize);
-    this.app.changeBaseFontSize(this.settings.defaultBaseFontSize);
+    //@ts-ignore
+    this.app.vault.setConfig('baseFontSize', this.settings.defaultBaseFontSize);
+    this.app.updateFontSize();
     if (this.settings.resetGlobalZoomFactor && Platform.isDesktop) {
       // console.log('setting global zoomFactor to 1');
       // require("electron").webFrame.setZoomFactor(1); // deprecated, non-persistent
